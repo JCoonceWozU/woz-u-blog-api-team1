@@ -1,12 +1,21 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    /*id("org.flywaydb.flyway\" version \"6.4.3")*/
     id("org.springframework.boot") version "2.3.0.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     kotlin("jvm") version "1.3.72"
     kotlin("plugin.spring") version "1.3.72"
     kotlin("plugin.jpa") version "1.3.72"
+
 }
+/*flyway {
+    url = "jdbc:postgresql://localhost:5432/median_db"
+    user = "postgres"
+    password = "password123"
+    outOfOrder = true
+}*/
+
 
 group = "com.woz-u"
 version = "0.0.1-SNAPSHOT"
@@ -17,6 +26,7 @@ repositories {
 }
 
 dependencies {
+    /*implementation ("org.flywaydb:flyway-core")*/
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
