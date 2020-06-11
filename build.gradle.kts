@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    /*id("org.flywaydb.flyway\" version \"6.4.3")*/
     id("org.springframework.boot") version "2.3.0.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     kotlin("jvm") version "1.3.72"
@@ -9,12 +8,6 @@ plugins {
     kotlin("plugin.jpa") version "1.3.72"
 
 }
-/*flyway {
-    url = "jdbc:postgresql://localhost:5432/median_db"
-    user = "postgres"
-    password = "password123"
-    outOfOrder = true
-}*/
 
 
 group = "com.woz-u"
@@ -26,11 +19,10 @@ repositories {
 }
 
 dependencies {
-    /*implementation ("org.flywaydb:flyway-core")*/
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.okta.spring:okta-spring-boot-starter:1.4.0")
+    /*implementation("com.okta.spring:okta-spring-boot-starter:1.4.0")*/
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
