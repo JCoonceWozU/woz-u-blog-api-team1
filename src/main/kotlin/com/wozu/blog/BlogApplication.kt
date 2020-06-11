@@ -23,7 +23,11 @@ class BlogApplication(private val repository: ArticleRepository) {
 
     @Bean
     fun sendDatabase(): InitializingBean {
-        return InitializingBean { repository.save(Article("Article 1", "Body 1")) }
+        return InitializingBean {
+            repository.save(Article("Article 1", "Body 1"))
+            repository.save(Article("Article 2", "Body 2"))
+            repository.save(Article("Article 3", "Body 3"))
+        }
     }
 
     companion object {
