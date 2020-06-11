@@ -7,13 +7,13 @@ import javax.persistence.*
 data class Article(var title: String = "",
                    var body: String = "",
                    var slug: String = "",
-                   //@ManyToMany
-                   //var tagList: MutableList<Tag> = mutableListOf(),
+        //@ManyToMany
+        //var tagList: MutableList<Tag> = mutableListOf(),
                    var createdAt: OffsetDateTime = OffsetDateTime.now(),
                    var updatedAt: OffsetDateTime = OffsetDateTime.now(),
                    var favorited: Long = 0,
-                   //@ManyToOne
-                   //var author: User = User(),
+        //@ManyToOne
+        //var author: User = User(),
                    var isPaid: Boolean = false,
                    var isPublished: Boolean = false,
                    var wordCount: Long = 0,
