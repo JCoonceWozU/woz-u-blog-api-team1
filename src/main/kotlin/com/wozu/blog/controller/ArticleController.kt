@@ -21,7 +21,7 @@ class ArticleController(val repository: ArticleRepository) {
 
         //val currentUser = userService.currentUser()
 
-        val article = Article(title = newArticle.title!!, body = newArticle.body!!)
+        val article = Article(title = newArticle.title, body = newArticle.body)
 
         repository.save(article)
         return "success"
