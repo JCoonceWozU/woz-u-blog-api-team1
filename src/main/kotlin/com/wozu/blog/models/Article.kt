@@ -4,7 +4,8 @@ import java.time.OffsetDateTime
 import javax.persistence.*
 
 @Entity
-data class Article(var title: String = "",
+data class
+Article(var title: String = "",
                    var body: String = "",
                    var slug: String = "",
         //@ManyToMany
