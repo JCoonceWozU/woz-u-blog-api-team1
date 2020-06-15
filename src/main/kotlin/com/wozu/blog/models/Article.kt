@@ -17,7 +17,7 @@ data class Article(var title: String,
                    @JoinColumn(name = "author_id")
                    var author: Users?,
                    @OneToMany(mappedBy = "article")
-                   var comments: List<Comment> = ArrayList<Comment>(),
+                   var comments: MutableList<Comment> = ArrayList<Comment>(),
                    @Id @GeneratedValue(strategy = GenerationType.AUTO)
                    var id: Long = 0) {
     //create algorithm for read time

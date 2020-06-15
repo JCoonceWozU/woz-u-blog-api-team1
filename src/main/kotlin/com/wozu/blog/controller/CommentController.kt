@@ -1,25 +1,17 @@
 package com.wozu.blog.controller
 
 import com.wozu.blog.models.Comment
+import com.wozu.blog.repository.ArticleRepository
 import com.wozu.blog.repository.CommentRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-class CommentController(val repository: CommentRepository) {
+class CommentController(val repository: CommentRepository, val articles: ArticleRepository) {
     @CrossOrigin()
-    @GetMapping("/api/comments")
-    fun getComments() : MutableList <Comment> {
-        return repository.findAll()
-    }
-
-    @GetMapping("/api/comments/{id}")
-    fun getComment(@PathVariable(value = "id") id: Long): ResponseEntity<Comment> {
-        val queriedComment = repository.findById(id).orElse(null)
-                ?: return ResponseEntity.notFound().header("Comment",
-                        "Nothing found with that id").build()
-        return ResponseEntity.ok(queriedComment)
-
+    @GetMapping("/api/comments/{article_id}")
+    fun getComments(@PathVariable(value = "article_id") articleId: Long): MutableList<Comment> {
+        return articles.findById(articleId).get().comments
     }
 
     @PostMapping("/api/comments")
@@ -36,16 +28,6 @@ class CommentController(val repository: CommentRepository) {
         val foundComment: Comment = repository.findById(id).orElse(null)
         repository.delete(foundComment)
         return ResponseEntity.ok().build<Comment?>()
-    }
-
-    @PutMapping("api/comments/")
-    fun putComment(@RequestBody comment: Comment): ResponseEntity<Comment?>? {
-        // Saving to DB using an instance of the repo interface.
-        var updatedComment: Comment
-        return run {
-            updatedComment = repository.save(comment)
-            ResponseEntity.ok<Comment?>(updatedComment)
-        }
     }
 
     @PutMapping("api/comments/{id}")
