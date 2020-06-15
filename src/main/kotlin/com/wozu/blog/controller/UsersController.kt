@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class UsersController(val repository: UsersRepository) {
     @CrossOrigin()
-    @GetMapping("/api/userss")
+    @GetMapping("/api/users")
     fun getUserss() : MutableList <Users> {
         return repository.findAll()
     }
 
-    @GetMapping("/api/userss/{id}")
+    @GetMapping("/api/users/{id}")
     fun getUsers(@PathVariable(value = "id") id: Long): ResponseEntity<Users> {
         val queriedUsers = repository.findById(id).orElse(null)
                 ?: return ResponseEntity.notFound().header("Users",
@@ -22,7 +22,7 @@ class UsersController(val repository: UsersRepository) {
 
     }
 
-    @PostMapping("/api/userss")
+    @PostMapping("/api/users")
     fun postUsers(@RequestBody users: Users): ResponseEntity<Users>? {
         // Saving to DB using an instance of the repo interface.
         val createdUsers: Users = repository.save(users)
@@ -31,14 +31,14 @@ class UsersController(val repository: UsersRepository) {
         return ResponseEntity.ok<Users>(createdUsers)
     }
 
-    @DeleteMapping("/api/userss/{id}")
+    @DeleteMapping("/api/users/{id}")
     fun deleteUsers(@PathVariable(value = "id") id: Long): ResponseEntity<Users?>? {
         val foundUsers: Users = repository.findById(id).orElse(null)
         repository.delete(foundUsers)
         return ResponseEntity.ok().build<Users?>()
     }
 
-    @PutMapping("api/userss/")
+    @PutMapping("api/users/")
     fun putUsers(@RequestBody users: Users): ResponseEntity<Users?>? {
         // Saving to DB using an instance of the repo interface.
         var updatedUsers: Users
@@ -48,7 +48,7 @@ class UsersController(val repository: UsersRepository) {
         }
     }
 
-    @PutMapping("api/userss/{id}")
+    @PutMapping("api/users/{id}")
     fun putUsers(@RequestBody users: Users,
                    @PathVariable(value = "id") id: Long): ResponseEntity<Users?>? {
         // Saving to DB using an instance of the repo interface.
