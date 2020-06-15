@@ -1,10 +1,10 @@
 package com.wozu.blog.repository
 
-import com.wozu.blog.models.Article
+import com.wozu.blog.models.Users
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ArticleRepository : JpaRepository<Article, Long> {
-    fun findFirstById(id: Long): Article?
+interface UsersRepository: JpaRepository<Users, Long> {
+    fun findFirstById(id: Long): Users?
 }
