@@ -2,12 +2,14 @@ package com.wozu.blog.controller
 
 import com.wozu.blog.models.Article
 import com.wozu.blog.repository.ArticleRepository
+import com.wozu.blog.utilities.Serializer
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 
 @RestController
 class ArticleController(val repository: ArticleRepository) {
+    val serializer = Serializer()
 
     @CrossOrigin()
     @GetMapping("/api/articles")
@@ -16,8 +18,8 @@ class ArticleController(val repository: ArticleRepository) {
     }
 
     @GetMapping("/api/articles/{id}")
-    fun getArticle(@PathVariable(value = "id") id: Long): ResponseEntity<Article> {
-        val queriedArticle = repository.findById(id).orElse(null)
+    fun getArticle(@PathVariable(value = "id") id: Long): ResponseEntity<String?> {
+        val queriedArticle = serializer.execute(repository, id)
                 ?: return ResponseEntity.notFound().header("Article",
                         "Nothing found with that id").build()
         return ResponseEntity.ok(queriedArticle)
