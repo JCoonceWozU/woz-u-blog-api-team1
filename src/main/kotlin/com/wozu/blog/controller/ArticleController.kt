@@ -4,17 +4,15 @@ import com.wozu.blog.models.Article
 import com.wozu.blog.repository.ArticleRepository
 import com.wozu.blog.repository.UsersRepository
 import org.springframework.validation.Errors
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class ArticleController(val repository: ArticleRepository) {
 
+    @CrossOrigin()
     @GetMapping("/api/articles")
-    fun articles(): String {
-        return "hereAreArticles";
+    fun getArticles() : MutableList <Article> {
+        return repository.findAll()
     }
 
     @PostMapping("/api/articles")

@@ -9,8 +9,10 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
 
 @SpringBootApplication
+
 class BlogApplication(private val articles: ArticleRepository,
     private val users: UsersRepository) {
+
 
     companion object {
         @JvmStatic
