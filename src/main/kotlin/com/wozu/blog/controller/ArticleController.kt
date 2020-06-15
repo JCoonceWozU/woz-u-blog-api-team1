@@ -17,9 +17,6 @@ class ArticleController(val repository: ArticleRepository) {
 
     @GetMapping("/api/articles/{id}")
     fun getArticle(@PathVariable(value = "id") id: Long): Article? {
-        /*val queriedArticle = serializer.execute(repository, id)
-                ?: return ResponseEntity.notFound().header("Article",
-                        "Nothing found with that id").build()*/
         return repository.findById(id).orElse(null)
 
     }

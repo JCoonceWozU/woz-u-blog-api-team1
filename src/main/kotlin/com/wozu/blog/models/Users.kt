@@ -21,7 +21,7 @@ data class Users(
         @OneToMany(mappedBy = "commenter")
         var comments: List<Comment> = ArrayList<Comment>(),
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0) {
 
 }

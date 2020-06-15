@@ -14,11 +14,8 @@ class UsersController(val repository: UsersRepository) {
     }
 
     @GetMapping("/api/users/{id}")
-    fun getUsers(@PathVariable(value = "id") id: Long): ResponseEntity<Users> {
-        val queriedUsers = repository.findById(id).orElse(null)
-                ?: return ResponseEntity.notFound().header("Users",
-                        "Nothing found with that id").build()
-        return ResponseEntity.ok(queriedUsers)
+    fun getUsers(@PathVariable(value = "id") id: Long): Users? {
+        return repository.findById(id).orElse(null)
 
     }
 
