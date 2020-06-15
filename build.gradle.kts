@@ -23,6 +23,9 @@ dependencies {
     /*implementation("com.okta.spring:okta-spring-boot-starter:1.4.0")*/
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.11.0")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.11.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.11.0")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {

@@ -1,39 +1,30 @@
-/* package com.wozu.blog
-
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
-
-@SpringBootApplication
-class BlogApplication
-
-fun main(args: Array<String>) {
-    runApplication<BlogApplication>(*args)
-} */
 package com.wozu.blog
 
-import com.wozu.blog.models.Article
-import org.springframework.beans.factory.InitializingBean
-import org.springframework.context.annotation.Bean
 import com.wozu.blog.repository.ArticleRepository
+import com.wozu.blog.repository.UsersRepository
+import com.wozu.blog.utilities.Deserializer
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.event.EventListener
 
 @SpringBootApplication
-class BlogApplication(private val repository: ArticleRepository) {
 
-    @Bean
-    fun sendDatabase(): InitializingBean {
-        return InitializingBean {
-            repository.save(Article("Article 1", "Body 1"))
-            repository.save(Article("Article 2", "Body 2"))
-            repository.save(Article("Article 3", "Body 3"))
-        }
-    }
+class BlogApplication(private val articles: ArticleRepository,
+    private val users: UsersRepository) {
+
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            runApplication<BlogApplication>(*args)
+            SpringApplication.run(BlogApplication::class.java, *args)
         }
+    }
+
+    @EventListener
+    fun populateOnLoad(event: ApplicationReadyEvent) {
+        val populater = Deserializer()
+        populater.execute(articles, "articleseed.json")
+        populater.execute(users, "userseed.json")
     }
 }
