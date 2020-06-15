@@ -19,7 +19,7 @@ class ArticleController(val repository: ArticleRepository) {
     @PostMapping("/api/articles")
     fun newArticle(@RequestBody newArticle: Article, errors: Errors): Any {
 
-        val article = Article(title = newArticle.title, body = newArticle.body, author = newArticle.author)
+        val article = Article(title = newArticle.title, body = newArticle.body)
 
         repository.save(article)
         return "success"

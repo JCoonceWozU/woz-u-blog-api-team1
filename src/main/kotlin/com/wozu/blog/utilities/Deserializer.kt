@@ -3,9 +3,9 @@ package com.wozu.blog.utilities
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.wozu.blog.models.Article
-import com.wozu.blog.models.User
+import com.wozu.blog.models.Users
 import com.wozu.blog.repository.ArticleRepository
-import com.wozu.blog.repository.UserRepository
+import com.wozu.blog.repository.UsersRepository
 import java.io.File
 
 class Deserializer {
@@ -37,12 +37,12 @@ class Deserializer {
         }
     }
 
-    fun execute(repo: UserRepository, fileName: String) {
+    fun execute(repo: UsersRepository, fileName: String) {
         println(System.getProperty("user.dir"))
         val filePath = path + fileName
         val mapper = ObjectMapper()
         val inputFile = File(filePath)
-        val records: List<User> = mapper.readValue(inputFile)
+        val records: List<Users> = mapper.readValue(inputFile)
         for (record in records) {
             println(record)
             repo.save(record)
