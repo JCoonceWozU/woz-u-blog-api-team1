@@ -1,9 +1,9 @@
 package com.wozu.blog.repository
 
-import com.wozu.blog.models.Users
+import com.wozu.blog.models.Comment
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface UsersRepository: JpaRepository<Users, Long> {
+interface CommentRepository: JpaRepository<Comment, Long> {
 }

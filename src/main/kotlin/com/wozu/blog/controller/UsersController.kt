@@ -2,25 +2,60 @@ package com.wozu.blog.controller
 
 import com.wozu.blog.models.Users
 import com.wozu.blog.repository.UsersRepository
-import org.springframework.validation.Errors
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class UsersController(val repository: UsersRepository) {
+    @CrossOrigin()
     @GetMapping("/api/users")
-    fun users(): String {
-        return "hereAreUsers";
+    fun getUsers() : MutableList <Users> {
+        return repository.findAll()
+    }
+
+    @GetMapping("/api/users/{id}")
+    fun getUsers(@PathVariable(value = "id") id: Long): ResponseEntity<Users> {
+        val queriedUsers = repository.findById(id).orElse(null)
+                ?: return ResponseEntity.notFound().header("Users",
+                        "Nothing found with that id").build()
+        return ResponseEntity.ok(queriedUsers)
+
     }
 
     @PostMapping("/api/users")
-    fun newUser(@RequestBody newUser: Users, errors: Errors): Any {
+    fun postUsers(@RequestBody users: Users): ResponseEntity<Users>? {
+        // Saving to DB using an instance of the repo interface.
+        val createdUsers: Users = repository.save(users)
 
-        val user = Users(email = newUser.email, password = newUser.password)
+        // RespEntity crafts response to include correct status codes.
+        return ResponseEntity.ok<Users>(createdUsers)
+    }
 
-        repository.save(user)
-        return "success"
+    @DeleteMapping("/api/users/{id}")
+    fun deleteUsers(@PathVariable(value = "id") id: Long): ResponseEntity<Users?>? {
+        val foundUsers: Users = repository.findById(id).orElse(null)
+        repository.delete(foundUsers)
+        return ResponseEntity.ok().build<Users?>()
+    }
+
+    @PutMapping("api/users/")
+    fun putUsers(@RequestBody users: Users): ResponseEntity<Users?>? {
+        // Saving to DB using an instance of the repo interface.
+        var updatedUsers: Users
+        return run {
+            updatedUsers = repository.save(users)
+            ResponseEntity.ok<Users?>(updatedUsers)
+        }
+    }
+
+    @PutMapping("api/users/{id}")
+    fun putUsers(@RequestBody users: Users,
+                   @PathVariable(value = "id") id: Long): ResponseEntity<Users?>? {
+        // Saving to DB using an instance of the repo interface.
+        var updatedUsers: Users
+        return run {
+            updatedUsers = repository.save(users)
+            ResponseEntity.ok<Users?>(updatedUsers)
+        }
     }
 }
