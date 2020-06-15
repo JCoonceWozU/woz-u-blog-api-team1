@@ -18,6 +18,8 @@ data class Users(
         var updatedAt: OffsetDateTime = OffsetDateTime.now(),
         @OneToMany(mappedBy = "author")
         var articles: List<Article> = ArrayList<Article>(),
+        @OneToMany(mappedBy = "commenter")
+        var comments: List<Comment> = ArrayList<Comment>(),
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         var id: Long = 0) {

@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ArticleRepository : JpaRepository<Article, Long> {
-    fun findFirstById(id: Long): Article?
 }

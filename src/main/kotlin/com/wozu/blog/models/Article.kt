@@ -5,7 +5,8 @@ import javax.persistence.*
 
 @Entity
 data class Article(var title: String,
-                   var body: String,
+                   var shortBody: String,
+                   var body: String = "",
                    var createdAt: OffsetDateTime = OffsetDateTime.now(),
                    var updatedAt: OffsetDateTime = OffsetDateTime.now(),
                    var favorited: Long = 0,
@@ -16,6 +17,8 @@ data class Article(var title: String,
                    @ManyToOne
                    @JoinColumn(name = "author_id")
                    var author: Users?,
+                   @OneToMany(mappedBy = "article")
+                   var comments: List<Comment> = ArrayList<Comment>(),
                    @Id @GeneratedValue(strategy = GenerationType.AUTO)
                    var id: Long = 0) {
     //create algorithm for read time
