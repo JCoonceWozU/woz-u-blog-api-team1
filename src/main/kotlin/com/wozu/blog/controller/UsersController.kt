@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 class UsersController(val repository: UsersRepository) {
     @CrossOrigin()
     @GetMapping("/api/users")
-    fun getUserss() : MutableList <Users> {
+    fun getUsers() : MutableList <Users> {
         return repository.findAll()
     }
 
