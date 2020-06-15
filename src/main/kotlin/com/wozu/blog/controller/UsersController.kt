@@ -18,8 +18,6 @@ class UsersController(val repository: UsersRepository) {
     @PostMapping("/api/users")
     fun newUser(@RequestBody newUser: Users, errors: Errors): Any {
 
-        //val currentUser = userService.currentUser()
-
         val user = Users(email = newUser.email, password = newUser.password)
 
         repository.save(user)

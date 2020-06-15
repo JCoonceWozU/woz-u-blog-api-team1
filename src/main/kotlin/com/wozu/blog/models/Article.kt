@@ -1,6 +1,5 @@
 package com.wozu.blog.models
 
-import org.jetbrains.annotations.NotNull
 import java.time.OffsetDateTime
 import javax.persistence.*
 
@@ -19,8 +18,8 @@ data class Article(var title: String,
                    var wordCount: Long = 0,
                    var readTime: Long = 0,
                    @ManyToOne
-                   @JoinColumn(name = "user_id")
-                   var user: Users,
+                   @JoinColumn(name = "author_id")
+                   var author: Users?,
                    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
                    var id: Long = 0) {
     //create algorithm for read time

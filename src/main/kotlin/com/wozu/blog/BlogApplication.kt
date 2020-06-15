@@ -22,7 +22,7 @@ class BlogApplication(private val articles: ArticleRepository,
     @EventListener
     fun populateOnLoad(event: ApplicationReadyEvent) {
         val populater = Deserializer()
-        // populater.execute(articles, "articleseed.json")
+        populater.execute(articles, "articleseed.json")
         populater.execute(users, "userseed.json")
     }
 }
