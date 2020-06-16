@@ -14,6 +14,7 @@ class CommentController(val repository: CommentRepository, val articles: Article
         return articles.findById(articleId).get().comments
     }
 
+    @CrossOrigin()
     @PostMapping("/api/comments")
     fun postComment(@RequestBody comment: Comment): ResponseEntity<Comment?>? {
         // Saving to DB using an instance of the repo interface.
@@ -23,6 +24,7 @@ class CommentController(val repository: CommentRepository, val articles: Article
         return ResponseEntity.ok<Comment>(createdComment)
     }
 
+    @CrossOrigin()
     @DeleteMapping("/api/comments/{id}")
     fun deleteComment(@PathVariable(value = "id") id: Long): ResponseEntity<Comment?>? {
         val foundComment: Comment = repository.findById(id).orElse(null)
@@ -30,6 +32,7 @@ class CommentController(val repository: CommentRepository, val articles: Article
         return ResponseEntity.ok<Comment?>(foundComment)
     }
 
+    @CrossOrigin()
     @PutMapping("api/comments/{id}")
     fun putComment(@RequestBody comment: Comment,
                    @PathVariable(value = "id") id: Long): ResponseEntity<Comment?>? {

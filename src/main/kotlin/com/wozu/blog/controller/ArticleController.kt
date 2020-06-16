@@ -15,12 +15,14 @@ class ArticleController(val repository: ArticleRepository) {
         return repository.findAll()
     }
 
+    @CrossOrigin()
     @GetMapping("/api/articles/{id}")
     fun getArticle(@PathVariable(value = "id") id: Long): Article? {
         return repository.findById(id).orElse(null)
 
     }
 
+    @CrossOrigin()
     @PostMapping("/api/articles")
     fun postArticle(@RequestBody article: Article): ResponseEntity<Article>? {
         // Saving to DB using an instance of the repo interface.
@@ -30,6 +32,7 @@ class ArticleController(val repository: ArticleRepository) {
         return ResponseEntity.ok<Article>(createdArticle)
     }
 
+    @CrossOrigin()
     @DeleteMapping("/api/articles/{id}")
     fun deleteArticle(@PathVariable(value = "id") id: Long): ResponseEntity<Article?>? {
         val foundArticle: Article = repository.findById(id).orElse(null)
@@ -37,6 +40,7 @@ class ArticleController(val repository: ArticleRepository) {
         return ResponseEntity.ok().build<Article?>()
     }
 
+    @CrossOrigin()
     @PutMapping("api/articles/")
     fun putArticle(@RequestBody article: Article): ResponseEntity<Article?>? {
         // Saving to DB using an instance of the repo interface.
@@ -47,6 +51,7 @@ class ArticleController(val repository: ArticleRepository) {
         }
     }
 
+    @CrossOrigin()
     @PutMapping("api/articles/{id}")
     fun putArticle(@RequestBody article: Article,
                    @PathVariable(value = "id") id: Long): ResponseEntity<Article?>? {
