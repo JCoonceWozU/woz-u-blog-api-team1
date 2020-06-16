@@ -15,7 +15,7 @@ class CommentController(val repository: CommentRepository, val articles: Article
     }
 
     @PostMapping("/api/comments")
-    fun postComment(@RequestBody comment: Comment): ResponseEntity<Comment>? {
+    fun postComment(@RequestBody comment: Comment): ResponseEntity<Comment?>? {
         // Saving to DB using an instance of the repo interface.
         val createdComment: Comment = repository.save(comment)
 
@@ -27,7 +27,7 @@ class CommentController(val repository: CommentRepository, val articles: Article
     fun deleteComment(@PathVariable(value = "id") id: Long): ResponseEntity<Comment?>? {
         val foundComment: Comment = repository.findById(id).orElse(null)
         repository.delete(foundComment)
-        return ResponseEntity.ok().build<Comment?>()
+        return ResponseEntity.ok<Comment?>(foundComment)
     }
 
     @PutMapping("api/comments/{id}")
