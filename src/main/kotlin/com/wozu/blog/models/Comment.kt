@@ -13,6 +13,6 @@ data class Comment(var body: String = "",
                    @JoinColumn(name = "commenter_id")
                    var commenter: Users?,
                    @Id
-                   @GeneratedValue(strategy = GenerationType.AUTO)
+                   @GeneratedValue(strategy = GenerationType.IDENTITY)
                    var id: Long = 0) {
 }

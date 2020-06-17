@@ -13,15 +13,14 @@ class UsersController(val repository: UsersRepository) {
         return repository.findAll()
     }
 
+    @CrossOrigin()
     @GetMapping("/api/users/{id}")
-    fun getUsers(@PathVariable(value = "id") id: Long): ResponseEntity<Users> {
-        val queriedUsers = repository.findById(id).orElse(null)
-                ?: return ResponseEntity.notFound().header("Users",
-                        "Nothing found with that id").build()
-        return ResponseEntity.ok(queriedUsers)
+    fun getUsers(@PathVariable(value = "id") id: Long): Users? {
+        return repository.findById(id).orElse(null)
 
     }
 
+    @CrossOrigin()
     @PostMapping("/api/users")
     fun postUsers(@RequestBody users: Users): ResponseEntity<Users>? {
         // Saving to DB using an instance of the repo interface.
@@ -31,6 +30,7 @@ class UsersController(val repository: UsersRepository) {
         return ResponseEntity.ok<Users>(createdUsers)
     }
 
+    @CrossOrigin()
     @DeleteMapping("/api/users/{id}")
     fun deleteUsers(@PathVariable(value = "id") id: Long): ResponseEntity<Users?>? {
         val foundUsers: Users = repository.findById(id).orElse(null)
@@ -38,6 +38,7 @@ class UsersController(val repository: UsersRepository) {
         return ResponseEntity.ok().build<Users?>()
     }
 
+    @CrossOrigin()
     @PutMapping("api/users/")
     fun putUsers(@RequestBody users: Users): ResponseEntity<Users?>? {
         // Saving to DB using an instance of the repo interface.
@@ -48,6 +49,7 @@ class UsersController(val repository: UsersRepository) {
         }
     }
 
+    @CrossOrigin()
     @PutMapping("api/users/{id}")
     fun putUsers(@RequestBody users: Users,
                    @PathVariable(value = "id") id: Long): ResponseEntity<Users?>? {
