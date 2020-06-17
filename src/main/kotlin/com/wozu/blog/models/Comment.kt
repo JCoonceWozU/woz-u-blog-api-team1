@@ -4,15 +4,13 @@ import java.time.OffsetDateTime
 import javax.persistence.*
 
 @Entity
-data class Comment(var body: String = "",
-                   var createdAt: OffsetDateTime = OffsetDateTime.now(),
+data class Comment(var createdAt: OffsetDateTime = OffsetDateTime.now(),
+                   var updatedAt: OffsetDateTime = OffsetDateTime.now(),
+                   var body: String = "",
                    @ManyToOne
-                   @JoinColumn(name = "article_id")
-                   var article: Article?,
+                   var article: Article = Article(),
                    @ManyToOne
-                   @JoinColumn(name = "commenter_id")
-                   var commenter: Users?,
-                   @Id
-                   @GeneratedValue(strategy = GenerationType.IDENTITY)
+                   var author: Users = Users(),
+                   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
                    var id: Long = 0) {
 }
