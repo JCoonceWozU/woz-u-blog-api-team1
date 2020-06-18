@@ -1,27 +1,20 @@
 package com.wozu.blog.models
 
-import org.jetbrains.annotations.Nullable
-import java.time.OffsetDateTime
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonRootName
 import javax.persistence.*
 
 @Entity
-data class Users(
-        var email: String = "",
-        var password: String = "",
-        var firstName: String = "",
-        var lastName: String = "",
-        var bio:String = "",
-        var imageUrl: String = "",
-        var socialLink: String = "",
-        var isPaid: Boolean = false,
-        var createdAt: OffsetDateTime = OffsetDateTime.now(),
-        var updatedAt: OffsetDateTime = OffsetDateTime.now(),
-        @OneToMany(mappedBy = "author")
-        var articles: List<Article> = ArrayList<Article>(),
-        @OneToMany(mappedBy = "commenter")
-        var comments: List<Comment> = ArrayList<Comment>(),
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        var id: Long = 0) {
+@JsonRootName("users")
+data class Users(var email: String = "",
+                 @JsonIgnore
+                 var password: String = "",
+                 // var token: String = "",
+                 var username: String = "",
+                 var bio: String = "",
+                 var image: String = "",
+                 @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+                 var id: Long = 0) {
+    override fun toString(): String = "User($email, $username)"
 
 }

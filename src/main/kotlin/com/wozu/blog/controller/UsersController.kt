@@ -1,63 +1,93 @@
 package com.wozu.blog.controller
 
+import com.wozu.blog.exceptions.ForbiddenRequestException
+import com.wozu.blog.exceptions.InvalidException
+import com.wozu.blog.exceptions.InvalidLoginException
+import com.wozu.blog.exceptions.InvalidRequest
 import com.wozu.blog.models.Users
+import com.wozu.blog.models.io.Login
+import com.wozu.blog.models.io.Register
+import com.wozu.blog.models.io.UpdateUsers
 import com.wozu.blog.repository.UsersRepository
-import org.springframework.http.ResponseEntity
+import com.wozu.blog.service.UsersService
+import org.mindrot.jbcrypt.BCrypt
+import org.springframework.validation.BindException
+import org.springframework.validation.Errors
+import org.springframework.validation.FieldError
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RestController
-class UsersController(val repository: UsersRepository) {
-    @CrossOrigin()
-    @GetMapping("/api/users")
-    fun getUsers() : MutableList <Users> {
-        return repository.findAll()
+class UsersController(val repository: UsersRepository,
+                      val service: UsersService) {
+
+    @PostMapping("/api/users/login")
+    fun login(@Valid @RequestBody login: Login, errors: Errors): Any {
+        InvalidRequest.check(errors)
+
+        try {
+            service.login(login)?.let {
+                return view(service.setCurrentUser(it))
+            }
+            return ForbiddenRequestException()
+        } catch (e: InvalidLoginException) {
+            val errors = org.springframework.validation.BindException(this, "")
+            errors.addError(FieldError("", e.field, e.error))
+            throw InvalidException(errors)
+        }
     }
 
-    @CrossOrigin()
-    @GetMapping("/api/users/{id}")
-    fun getUsers(@PathVariable(value = "id") id: Long): Users? {
-        return repository.findById(id).orElse(null)
-
-    }
-
-    @CrossOrigin()
     @PostMapping("/api/users")
-    fun postUsers(@RequestBody users: Users): ResponseEntity<Users>? {
-        // Saving to DB using an instance of the repo interface.
-        val createdUsers: Users = repository.save(users)
+    fun register(@Valid @RequestBody register: Register, errors: Errors): Any {
+        InvalidRequest.check(errors)
 
-        // RespEntity crafts response to include correct status codes.
-        return ResponseEntity.ok<Users>(createdUsers)
+        // check for duplicate user
+        val errors = org.springframework.validation.BindException(this, "")
+        checkUserAvailability(errors, register.email)
+        InvalidRequest.check(errors)
+
+        val user = Users(username = register.email!!,
+                email = register.email!!, password = BCrypt.hashpw(register.password, BCrypt.gensalt()))
+
+        return view(repository.save(user))
     }
 
-    @CrossOrigin()
-    @DeleteMapping("/api/users/{id}")
-    fun deleteUsers(@PathVariable(value = "id") id: Long): ResponseEntity<Users?>? {
-        val foundUsers: Users = repository.findById(id).orElse(null)
-        repository.delete(foundUsers)
-        return ResponseEntity.ok().build<Users?>()
+    @GetMapping("/api/user")
+    fun currentUser() = view(service.currentUser())
+
+    @PutMapping("/api/user")
+    fun updateUser(@Valid @RequestBody user: UpdateUsers, errors: Errors): Any {
+        InvalidRequest.check(errors)
+
+        val currentUser = service.currentUser()
+
+        // check for errors
+        val errors = org.springframework.validation.BindException(this, "")
+        if (currentUser.email != user.email && user.email != null) {
+            if (repository.existsByEmail(user.email!!)) {
+                errors.addError(FieldError("", "email", "already taken"))
+            }
+        }
+        if (user.password == "") {
+            errors.addError(FieldError("", "password", "can't be empty"))
+        }
+        InvalidRequest.check(errors)
+
+        // update the user
+        val u = currentUser.copy(email = user.email ?: currentUser.email,
+                password = BCrypt.hashpw(user.password, BCrypt.gensalt()), image = user.image ?: currentUser.image,
+                bio = user.bio ?: currentUser.bio)
+
+        return view(repository.save(u))
     }
 
-    @CrossOrigin()
-    @PutMapping("api/users/")
-    fun putUsers(@RequestBody users: Users): ResponseEntity<Users?>? {
-        // Saving to DB using an instance of the repo interface.
-        var updatedUsers: Users
-        return run {
-            updatedUsers = repository.save(users)
-            ResponseEntity.ok<Users?>(updatedUsers)
+    private fun checkUserAvailability(errors: BindException, email: String?) {
+        email?.let { email ->
+            if (repository.existsByEmail(email)) {
+                errors.addError(FieldError("", "email", "already taken"))
+            }
         }
     }
 
-    @CrossOrigin()
-    @PutMapping("api/users/{id}")
-    fun putUsers(@RequestBody users: Users,
-                   @PathVariable(value = "id") id: Long): ResponseEntity<Users?>? {
-        // Saving to DB using an instance of the repo interface.
-        var updatedUsers: Users
-        return run {
-            updatedUsers = repository.save(users)
-            ResponseEntity.ok<Users?>(updatedUsers)
-        }
-    }
+    fun view(user: Users) = mapOf("user" to user)
 }
