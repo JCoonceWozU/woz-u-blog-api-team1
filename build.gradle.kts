@@ -20,13 +20,16 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    /*implementation("com.okta.spring:okta-spring-boot-starter:1.4.0")*/
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.fasterxml.jackson.core:jackson-core:2.11.0")
     implementation("com.fasterxml.jackson.core:jackson-annotations:2.11.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.11.0")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    implementation("org.hibernate.validator:hibernate-validator:6.1.2.Final")
+    implementation("com.github.slugify:slugify:2.4")
+    implementation("io.jsonwebtoken:jjwt:0.9.1")
+    implementation("org.mindrot:jbcrypt:0.4")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
