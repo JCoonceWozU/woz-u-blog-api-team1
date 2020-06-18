@@ -9,8 +9,7 @@ data class Comment(var createdAt: OffsetDateTime = OffsetDateTime.now(),
                    var body: String = "",
                    @ManyToOne
                    var article: Article = Article(),
-                   @ManyToOne
-                   var author: Users = Users(),
+                   var author: String = "",
                    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
                    var id: Long = 0) {
 }

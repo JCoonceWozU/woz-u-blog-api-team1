@@ -27,7 +27,7 @@ class UsersController(val repository: UsersRepository,
 
         try {
             service.login(login)?.let {
-                return view(service.updateUser(it))
+                return view(service.setCurrentUser(it))
             }
             return ForbiddenRequestException()
         } catch (e: InvalidLoginException) {
@@ -52,10 +52,10 @@ class UsersController(val repository: UsersRepository,
         return view(repository.save(user))
     }
 
-    @GetMapping("/api/users")
+    @GetMapping("/api/user")
     fun currentUser() = view(service.currentUser())
 
-    @PutMapping("/api/users")
+    @PutMapping("/api/user")
     fun updateUser(@Valid @RequestBody user: UpdateUsers, errors: Errors): Any {
         InvalidRequest.check(errors)
 
@@ -89,5 +89,5 @@ class UsersController(val repository: UsersRepository,
         }
     }
 
-    fun view(user: Users) = mapOf("users" to user)
+    fun view(user: Users) = mapOf("user" to user)
 }

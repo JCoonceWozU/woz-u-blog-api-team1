@@ -43,13 +43,13 @@ class ArticleController(val repository: ArticleRepository,
                 if (author != "") userRepository.findByEmail(author) else null
         ), p).toList()
 
-        return articlesView(articles, usersService.currentUser())
+        return articlesView(articles)
     }
 
     @GetMapping("/api/articles/{slug}")
     fun article(@PathVariable slug: String): Any {
         repository.findBySlug(slug)?.let {
-            return articleView(it, usersService.currentUser())
+            return articleView(it)
         }
         throw NotFoundException()
     }
@@ -67,19 +67,15 @@ class ArticleController(val repository: ArticleRepository,
         val currentUser = usersService.currentUser()
 
         val article = Article(slug = slug,
-                author = currentUser, title = newArticle.title!!, description = newArticle.description!!,
+                author = newArticle.author!!, title = newArticle.title!!, description = newArticle.description!!,
                 body = newArticle.body!!)
 
-        return articleView(repository.save(article), currentUser)
+        return articleView(repository.save(article))
     }
 
     @PutMapping("/api/articles/{slug}")
     fun updateArticle(@PathVariable slug: String, @RequestBody article: UpdateArticle): Any {
         repository.findBySlug(slug)?.let {
-            val currentUser = usersService.currentUser()
-            if (it.author.id != currentUser.id)
-                throw ForbiddenRequestException()
-
             // check for errors
             val errors = org.springframework.validation.BindException(this, "")
             if (article.title == "")
@@ -108,7 +104,7 @@ class ArticleController(val repository: ArticleRepository,
                     slug = slug,
                     updatedAt = OffsetDateTime.now())
 
-            return articleView(repository.save(updated), currentUser)
+            return articleView(repository.save(updated))
         }
 
         throw NotFoundException()
@@ -118,9 +114,6 @@ class ArticleController(val repository: ArticleRepository,
     @DeleteMapping("/api/articles/{slug}")
     fun deleteArticle(@PathVariable slug: String) {
         repository.findBySlug(slug)?.let {
-            if (it.author.id != usersService.currentUser().id)
-                throw ForbiddenRequestException()
-
             commentRepository.deleteAll(commentRepository.findByArticle(it))
             return repository.delete(it)
         }
@@ -131,7 +124,7 @@ class ArticleController(val repository: ArticleRepository,
     fun articleComments(@PathVariable slug: String): Any {
         repository.findBySlug(slug)?.let {
             val currentUser = usersService.currentUser()
-            return commentsView(commentRepository.findByArticleOrderByCreatedAtDesc(it), currentUser)
+            return commentsView(commentRepository.findByArticleOrderByCreatedAtDesc(it))
         }
         throw NotFoundException()
     }
@@ -142,8 +135,8 @@ class ArticleController(val repository: ArticleRepository,
 
         repository.findBySlug(slug)?.let {
             val currentUser = usersService.currentUser()
-            val newComment = Comment(body = comment.body!!, article = it, author = currentUser)
-            return commentView(commentRepository.save(newComment), currentUser)
+            val newComment = Comment(body = comment.body!!, article = it)
+            return commentView(commentRepository.save(newComment))
         }
         throw NotFoundException()
     }
@@ -152,13 +145,9 @@ class ArticleController(val repository: ArticleRepository,
     @DeleteMapping("/api/articles/{slug}/comments/{id}")
     fun deleteComment(@PathVariable slug: String, @PathVariable id: Long) {
         repository.findBySlug(slug)?.let {
-            val currentUser = usersService.currentUser()
             val comment = commentRepository.findById(id).orElseThrow { NotFoundException() }
             if (comment.article.id != it.id)
                 throw ForbiddenRequestException()
-            if (comment.author.id != currentUser.id)
-                throw ForbiddenRequestException()
-
             return commentRepository.delete(comment)
         }
         throw NotFoundException()
@@ -166,12 +155,12 @@ class ArticleController(val repository: ArticleRepository,
 
     // helpers
 
-    fun articleView(article: Article, currentUser: Users) = mapOf("article" to ArticleIO.fromModel(article, currentUser))
+    fun articleView(article: Article) = mapOf("article" to ArticleIO.fromModel(article))
 
-    fun articlesView(articles: List<Article>, currentUser: Users) = mapOf("articles" to articles.map { ArticleIO.fromModel(it, usersService.currentUser()) },
+    fun articlesView(articles: List<Article>) = mapOf("articles" to articles.map { ArticleIO.fromModel(it) },
             "articlesCount" to articles.size)
 
-    fun commentView(comment: Comment, currentUser: Users) = mapOf("comment" to CommentOut.fromModel(comment, currentUser))
+    fun commentView(comment: Comment) = mapOf("comment" to CommentOut.fromModel(comment))
 
-    fun commentsView(comments: List<Comment>, currentUser: Users) = mapOf("comments" to comments.map { CommentOut.fromModel(it, currentUser) })
+    fun commentsView(comments: List<Comment>) = mapOf("comments" to comments.map { CommentOut.fromModel(it) })
 }

@@ -10,10 +10,7 @@ data class Article(var slug: String = "",
                    var body: String = "",
                    var createdAt: OffsetDateTime = OffsetDateTime.now(),
                    var updatedAt: OffsetDateTime = OffsetDateTime.now(),
-                   // @ManyToMany
-                   // var favorited: MutableList<Users> = mutableListOf(),
-                   @ManyToOne
-                   var author: Users = Users(),
+                   var author: String = "",
                    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
                    var id: Long = 0) {
     //create algorithm for read time
