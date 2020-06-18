@@ -5,9 +5,9 @@ import com.wozu.blog.exceptions.InvalidException
 import com.wozu.blog.exceptions.InvalidLoginException
 import com.wozu.blog.exceptions.InvalidRequest
 import com.wozu.blog.models.Users
-import com.wozu.blog.models.tokenizer.Login
-import com.wozu.blog.models.tokenizer.Register
-import com.wozu.blog.models.tokenizer.UpdateUsers
+import com.wozu.blog.models.io.Login
+import com.wozu.blog.models.io.Register
+import com.wozu.blog.models.io.UpdateUsers
 import com.wozu.blog.repository.UsersRepository
 import com.wozu.blog.service.UsersService
 import org.mindrot.jbcrypt.BCrypt
@@ -27,7 +27,7 @@ class UsersController(val repository: UsersRepository,
 
         try {
             service.login(login)?.let {
-                return view(service.updateToken(it))
+                return view(service.updateUser(it))
             }
             return ForbiddenRequestException()
         } catch (e: InvalidLoginException) {
@@ -48,15 +48,14 @@ class UsersController(val repository: UsersRepository,
 
         val user = Users(username = register.email!!,
                 email = register.email!!, password = BCrypt.hashpw(register.password, BCrypt.gensalt()))
-        user.token = service.newToken(user)
 
         return view(repository.save(user))
     }
 
-    @GetMapping("/api/user")
+    @GetMapping("/api/users")
     fun currentUser() = view(service.currentUser())
 
-    @PutMapping("/api/user")
+    @PutMapping("/api/users")
     fun updateUser(@Valid @RequestBody user: UpdateUsers, errors: Errors): Any {
         InvalidRequest.check(errors)
 
@@ -78,10 +77,6 @@ class UsersController(val repository: UsersRepository,
         val u = currentUser.copy(email = user.email ?: currentUser.email,
                 password = BCrypt.hashpw(user.password, BCrypt.gensalt()), image = user.image ?: currentUser.image,
                 bio = user.bio ?: currentUser.bio)
-        // update token only if email changed
-        if (currentUser.email != u.email) {
-            u.token = service.newToken(u)
-        }
 
         return view(repository.save(u))
     }
@@ -94,5 +89,5 @@ class UsersController(val repository: UsersRepository,
         }
     }
 
-    fun view(user: Users) = mapOf("user" to user)
+    fun view(user: Users) = mapOf("users" to user)
 }

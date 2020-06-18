@@ -9,7 +9,7 @@ import javax.persistence.*
 data class Users(var email: String = "",
                  @JsonIgnore
                  var password: String = "",
-                 var token: String = "",
+                 // var token: String = "",
                  var username: String = "",
                  var bio: String = "",
                  var image: String = "",

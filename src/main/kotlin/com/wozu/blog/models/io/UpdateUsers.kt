@@ -1,4 +1,4 @@
-package com.wozu.blog.models.tokenizer
+package com.wozu.blog.models.io
 
 import com.fasterxml.jackson.annotation.JsonRootName
 import javax.validation.constraints.Pattern

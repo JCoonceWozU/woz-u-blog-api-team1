@@ -7,9 +7,9 @@ import com.wozu.blog.exceptions.NotFoundException
 import com.wozu.blog.models.Article
 import com.wozu.blog.models.Comment
 import com.wozu.blog.models.Users
-import com.wozu.blog.models.tokenizer.NewArticle
-import com.wozu.blog.models.tokenizer.NewComment
-import com.wozu.blog.models.tokenizer.UpdateArticle
+import com.wozu.blog.models.io.NewArticle
+import com.wozu.blog.models.io.NewComment
+import com.wozu.blog.models.io.UpdateArticle
 import com.wozu.blog.repository.ArticleRepository
 import com.wozu.blog.repository.CommentRepository
 import com.wozu.blog.repository.UsersRepository
@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.*
 import java.time.OffsetDateTime
 import javax.validation.Valid
 import java.util.*
-import com.wozu.blog.models.tokenizer.Article as ArticleIO
-import com.wozu.blog.models.tokenizer.Comment as CommentOut
+import com.wozu.blog.models.io.Article as ArticleIO
+import com.wozu.blog.models.io.Comment as CommentOut
 
 @RestController
 class ArticleController(val repository: ArticleRepository,
